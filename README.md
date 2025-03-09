@@ -1,4 +1,5 @@
-#Mindscape: AI-Powered Mental Health Tracking
+**#Mindscape: AI-Powered Mental Health Tracking**
+
 Mindscape is a comprehensive healthcare website designed to monitor and track your mental health and symptoms. With advanced AI integration and smartwatch connectivity, it offers a proactive approach to mental wellness.
 
 Features :-
