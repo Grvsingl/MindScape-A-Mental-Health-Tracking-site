@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker & Mental Health Monitoring</title>
+    <link rel="stylesheet" href="form.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('brain.jpg'); /* Replace with your background image */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .logs {
+            margin-top: 40px;
+        }
+
+        .log-entry {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .log-entry h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Symptom Checker</h1>
+        <form id="symptomForm">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" placeholder="Enter your age" required>
+
+            <label for="symptoms">Symptoms</label>
+            <textarea id="symptoms" name="symptoms" placeholder="Describe your symptoms" rows="4" required></textarea>
+
+            <button type="submit">Submit Symptom Report</button>
+        </form>
+
+        <h1>Mental Health Monitoring</h1>
+        <form id="mentalHealthForm">
+            <label for="mh_name">Name</label>
+            <input type="text" id="mh_name" name="mh_name" placeholder="Enter your name" required>
+
+            <label for="stressLevel">Stress Level (1 to 10)</label>
+            <input type="number" id="stressLevel" name="stressLevel" min="1" max="10" required>
+
+            <label for="mood">Mood</label>
+            <select id="mood" name="mood" required>
+                <option value="">Select your mood</option>
+                <option value="happy">Happy</option>
+                <option value="calm">Calm</option>
+                <option value="sad">Sad</option>
+                <option value="anxious">Anxious</option>
+                <option value="angry">Angry</option>
+            </select>
+
+            <label for="comments">Additional Comments</label>
+            <textarea id="comments" name="comments" placeholder="Enter any comments" rows="4"></textarea>
+
+            <button type="submit">Submit Mental Health Log</button>
+        </form>
+
+        <div class="logs">
+            <h2>Submitted Logs</h2>
+            <div id="logContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('symptomForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const symptoms = document.getElementById('symptoms').value;
+
+            fetch('/api/symptom-checker', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    age: age,
+                    symptoms: symptoms.split(','),
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById('symptomForm').reset();
+                loadLogs();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('mentalHealthForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('mh_name').value;
+            const stressLevel = document.getElementById('stressLevel').value;
+            const mood = document.getElementById('mood').value;
+            const comments = document.getElementById('comments').value;
+
+            fetch('/api/mental-health', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    stressLevel: stressLevel,
+                    mood: mood,
+                    comments: comments,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById('mentalHealthForm').reset();
+                loadLogs();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        function loadLogs() {
+            fetch('/api/symptom-reports')
+            .then(response => response.json())
+            .then(reports => {
+                const logContainer = document.getElementById('logContainer');
+                logContainer.innerHTML = '';
+
+                reports.forEach(report => {
+                    const logEntry = document.createElement('div');
+                    logEntry.classList.add('log-entry');
+                    logEntry.innerHTML = `<h3>Symptom Report: ${report.name}</h3><p>Age: ${report.age}</p><p>Symptoms: ${report.symptoms}</p><p>Timestamp: ${new Date(report.timestamp).toLocaleString()}</p>`;
+                    logContainer.appendChild(logEntry);
+                });
+            });
+
+            fetch('/api/mental-health-logs')
+            .then(response => response.json())
+            .then(logs => {
+                const logContainer = document.getElementById('logContainer');
+
+                logs.forEach(log => {
+                    const logEntry = document.createElement('div');
+                    logEntry.classList.add('log-entry');
+                    logEntry.innerHTML = `<h3>Mental Health Log: ${log.name}</h3><p>Stress Level: ${log.stressLevel}</p><p>Mood: ${log.mood}</p><p>Comments: ${log.comments}</p><p>Timestamp: ${new Date(log.timestamp).toLocaleString()}</p>`;
+                    logContainer.appendChild(logEntry);
+                });
+            });
+        }
+
+        // Load logs when the page is loaded
+        document.addEventListener('DOMContentLoaded', loadLogs);
+    </script>
+
+</body>
+</html>
+
