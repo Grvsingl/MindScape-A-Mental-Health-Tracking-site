@@ -1,0 +1,130 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+html{
+    scroll-behavior: smooth;
+}
+body{
+    background-color: #f1faee;
+}
+.navbar{
+    height: 15vh;
+    background: linear-gradient(#a8dadc,#457b9d);
+    text-align: center;
+}
+#title{
+     color: rgb(255, 255, 255);
+     font-size: 10vmin;
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.navtools{
+    height: 6vh;
+    background-color: #a8dadc;
+    display: flex;
+    justify-content: space-around;
+    gap: 1.5em;
+}
+.links{
+    font-size: 1.4em;
+    padding-top: 0.4em;
+    border-radius: 1.6em;
+    transition: ease-in 0.25s;
+    cursor: pointer;
+    text-decoration: none;
+}
+.links:hover{
+    background-color: #0fa3b1;
+}
+.menhl{
+    height: 40vh;
+    /*border: 2px solid black;*/
+    display: flex;
+    gap: 2em;
+    
+
+}
+.hed1{
+    font-size: 2em;
+    margin: 1em;
+    transition: ease-in 0.30s;
+}
+.hed1:hover{
+    font-size: 2.3em;
+    text-decoration: double;
+}
+.img{
+    height: 40vmin;
+    width: 45vmin;
+    background-image: url("img1.jpg");
+    background-size: cover;
+    border-radius: 0.8em;
+    box-shadow: 1px 1px 20px  #0fa3b1;
+    margin-left: 1em;
+}
+.con{
+    height: 40vmin;
+    width: 50vmin;
+    padding-top: 1em;
+    
+}
+.p1{
+    font-size: 1.5rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.menh2{
+    height: 60vh;
+    
+    margin: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#img2{
+    height: 60vmin;
+    width: 100vmin;
+    border-radius:0.9em;
+    background-image: url("img3.jpeg");
+    background-size: cover;
+    box-shadow: 1px 1px 20px  #06d625;
+    margin-top: 2em;
+}
+.img3con{
+    height: 90vh;
+    margin: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.img3{
+    height: 80vmin;
+    width: 100vmin;
+    border-radius:0.9em;
+    background-image: url("img4 (1).jpg");
+    background-size: cover;
+    box-shadow: 1px 1px 20px  #d606a9;
+    margin-top: 2em;
+}
+.credit{
+    height: 30vh;
+    background-color:#134074;
+}
+#lah1{
+    color: white;
+    font-size: 1.6em;
+}
+#lah2{
+    font-size: 1.4em;
+    color: aliceblue;
+}
+#tc{
+    margin: 2em;
+    font-size: 1em;
+}
+.credit{
+    display: flex;
+    align-items: center;
+}
+ul{
+    color: #f1faee;
+}
