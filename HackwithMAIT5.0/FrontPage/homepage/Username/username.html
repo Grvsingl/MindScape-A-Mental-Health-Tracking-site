@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: url('signin bg2.avif') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            background: url('sign bgimg.webp') no-repeat center center fixed;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #4A5568;
+        }
+        .input-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid #4A5568;
+            outline: none;
+            color: #4A5568;
+        }
+        .input-box label {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            color: #4A5568;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .input-box input:focus ~ label,
+        .input-box input:valid ~ label {
+            top: -10px;
+            font-size: 12px;
+            color: #4A5568;
+        }
+        .icon-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 10px;
+        }
+        .login-btn, .google-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: white;
+        }
+        .login-btn {
+            background-color: #38A169;
+        }
+        .login-btn:hover {
+            background-color: #2F855A;
+        }
+        .google-btn {
+            background-color: #db4437;
+        }
+        .google-btn:hover {
+            background-color: #c23321;
+        }
+        .forgot-password {
+            display: block;
+            margin-top: 10px;
+            color: #2D3748;
+            text-decoration: none;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Welcome Back</h2>
+            <form>
+                <div class="input-box">
+                    <input type="text" required>
+                    <label>Username</label>
+                </div>
+                <div class="input-box">
+                    <input type="password" required>
+                    <label>Password</label>
+                </div>
+                <div class="icon-container">
+                    
+                    
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <button type="button" class="google-btn">Login with Google</button>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
