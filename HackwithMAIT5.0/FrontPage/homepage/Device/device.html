@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartwatch Bluetooth & Location with Hospitals in Delhi</title>
+    <style>
+        /* Apply a full-screen background image */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('smartwatchimage.jpg'); /* Add your background image URL here */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+
+        /* Center content */
+        .container {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for content */
+            margin: auto;
+            max-width: 800px;
+            border-radius: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: black;
+            border-radius: 10px;
+        }
+
+        /* Set the size of the Google Map */
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        /* Style for the hospital list */
+        #hospitalList {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main content container with semi-transparent background -->
+    <div class="container">
+        <h1>Smartwatch Bluetooth & Location with Hospitals in Delhi</h1>
+
+        <!-- Button to connect to Bluetooth device -->
+        <button id="connectBtn">Connect to Smartwatch</button>
+
+        <!-- Button to get current location -->
+        <button id="locationBtn">Get Location</button>
+
+        <!-- Button to show hospital list -->
+        <button id="showHospitalsBtn">Show Hospital List</button>
+
+        <!-- Output for displaying heart rate and GPS coordinates -->
+        <div id="output">
+            <p>Status: <span id="status">Waiting for action...</span></p>
+            <p>Heart Rate: <span id="heartRate">N/A</span></p>
+            <p>Location: <span id="location">N/A</span></p>
+        </div>
+
+        <!-- Google Map to display location -->
+        <div id="map"></div>
+
+        <!-- Hospital List Section -->
+        <div id="hospitalList">
+            <h2>Hospitals in Delhi</h2>
+            <ul>
+                <li>AIIMS Hospital</li>
+                <li>Max Super Speciality Hospital</li>
+                <li>Fortis Escorts Heart Institute</li>
+                <li>Indraprastha Apollo Hospital</li>
+                <li>Manipal Hospital</li>
+                <li>Sir Ganga Ram Hospital</li>
+                <li>Max Healthcare Institute</li>
+                <li>BLK Super Speciality Hospital</li>
+                <li>Kailash Hospital</li>
+                <li>Sankalp Hospital</li>
+                <li>Holy Family Hospital</li>
+                <li>Artemis Hospital</li>
+                <li>Medanta - The Medicity</li>
+                <li>Fortis Hospital Shalimar Bagh</li>
+                <li>Lady Hardinge Medical College</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const connectBtn = document.getElementById('connectBtn');
+        const locationBtn = document.getElementById('locationBtn');
+        const showHospitalsBtn = document.getElementById('showHospitalsBtn');
+        const statusOutput = document.getElementById('status');
+        const heartRateOutput = document.getElementById('heartRate');
+        const locationOutput = document.getElementById('location');
+        const hospitalList = document.getElementById('hospitalList');
+
+        // Google Map object
+        let map;
+        let marker;
+
+        // Array of hospitals in Delhi with their locations
+        const hospitals = [
+            { name: "AIIMS Hospital", location: { lat: 28.5887, lng: 77.2210 } },
+            { name: "Max Super Speciality Hospital", location: { lat: 28.5924, lng: 77.2312 } },
+            { name: "Fortis Escorts Heart Institute", location: { lat: 28.6053, lng: 77.2494 } },
+            { name: "Indraprastha Apollo Hospital", location: { lat: 28.5748, lng: 77.2422 } },
+            { name: "Manipal Hospital", location: { lat: 28.6410, lng: 77.1472 } },
+            { name: "Sir Ganga Ram Hospital", location: { lat: 28.6297, lng: 77.1965 } },
+            { name: "Max Healthcare Institute", location: { lat: 28.6467, lng: 77.2087 } },
+            { name: "BLK Super Speciality Hospital", location: { lat: 28.6374, lng: 77.1537 } },
+            { name: "Kailash Hospital", location: { lat: 28.5860, lng: 77.3150 } },
+            { name: "Sankalp Hospital", location: { lat: 28.6325, lng: 77.2956 } },
+            { name: "Holy Family Hospital", location: { lat: 28.5745, lng: 77.2462 } },
+            { name: "Artemis Hospital", location: { lat: 28.4485, lng: 77.0818 } },
+            { name: "Medanta - The Medicity", location: { lat: 28.4506, lng: 77.0807 } },
+            { name: "Fortis Hospital Shalimar Bagh", location: { lat: 28.6464, lng: 77.1850 } },
+            { name: "Lady Hardinge Medical College", location: { lat: 28.6348, lng: 77.2270 } },
+            { name: "Shree Aggrasain International  Hospital ", location: { lat: 28.6741, lng: 77.1339 } },
+        ];
+
+        // Function to initialize Google Maps
+        function initMap() {
+            const defaultLocation = { lat: 28.6139, lng: 77.2090 }; // Default location (Delhi)
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: defaultLocation,
+                zoom: 12,
+            });
+
+            // Add markers for each hospital
+            hospitals.forEach(hospital => {
+                const marker = new google.maps.Marker({
+                    position: hospital.location,
+                    map: map,
+                    title: hospital.name
+                });
+            });
+
+            // Initialize the main marker
+            marker = new google.maps.Marker({
+                position: defaultLocation,
+                map: map,
+                title: "Your Location"
+            });
+        }
+
+        // Function to connect to a Bluetooth device (e.g., smartwatch)
+        async function connectBluetoothDevice() {
+            try {
+                // Request a device with Heart Rate Service (UUID)
+                const device = await navigator.bluetooth.requestDevice({
+                    filters: [{ services: ['heart_rate'] }]
+                });
+
+                // Connect to GATT Server
+                const server = await device.gatt.connect();
+
+                // Get Heart Rate Service
+                const service = await server.getPrimaryService('heart_rate');
+
+                // Get Heart Rate Measurement Characteristic
+                const characteristic = await service.getCharacteristic('heart_rate_measurement');
+
+                // Read heart rate data
+                const value = await characteristic.readValue();
+                const heartRate = value.getUint8(1);  // Heart rate value
+                heartRateOutput.textContent = heartRate + ' bpm';
+
+                statusOutput.textContent = "Smartwatch connected!";
+            } catch (error) {
+                console.error("Error connecting to device: ", error);
+                statusOutput.textContent = "Connection failed!";
+            }
+        }
+
+        // Function to get current location (GPS)
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const { latitude, longitude } = position.coords;
+                    locationOutput.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
+                    statusOutput.textContent = "Location retrieved!";
+                    
+                    // Update map with the new location
+                    const newLocation = { lat: latitude, lng: longitude };
+                    map.setCenter(newLocation);
+                    marker.setPosition(newLocation);
+                }, (error) => {
+                    console.error("Error getting location: ", error);
+                    statusOutput.textContent = "Failed to retrieve location!";
+                });
+            } else {
+                locationOutput.textContent = "Geolocation not supported by this browser.";
+            }
+        }
+
+        // Function to toggle the visibility of the hospital list
+        function toggleHospitalList() {
+            if (hospitalList.style.display === "none") {
+                hospitalList.style.display = "block";
+            } else {
+                hospitalList.style.display = "none";
+            }
+        }
+
+        // Event listeners
+        connectBtn.addEventListener('click', connectBluetoothDevice);
+        locationBtn.addEventListener('click', getLocation);
+        showHospitalsBtn.addEventListener('click', toggleHospitalList);
+
+    </script>
+
+    <!-- Google Maps JavaScript API with your API Key -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLJB7FhnT41Fv013aOrzsJzf39ui83i2k&callback=initMap">
+    </script>
+
+</body>
+</html>
